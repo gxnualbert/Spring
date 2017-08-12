@@ -8,7 +8,7 @@ public class Main {
 		HelloWorld helloWorld=new HelloWorld();
 //		为name属性赋值
 		helloWorld.setName("atguigu");
-//		调用hello方法
+//		调用hello方法gg
 		helloWorld.hello();
 		
 	}
