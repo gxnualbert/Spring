@@ -6,7 +6,5 @@
 	<!-- 配置bean -->
 	<bean id="helloworld" class="com.atguigu.spring.beans.HelloWorld">
 		<property name="name" value="Spring"></property>
-	
 	</bean>
-	
 </beans>
