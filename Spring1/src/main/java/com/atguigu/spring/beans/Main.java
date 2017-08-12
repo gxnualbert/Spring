@@ -13,10 +13,18 @@ public class Main {
 		*/
 		//如果使用spring的话，那么创建对象，给属性赋值，这两个过程都可以由spring来完成
 //		1.创建spring的IOC容器
+//		ApplicationContext 代表 IOC 容器
+//		ClassPathXmlApplicationContext：是ApplicationContext 接口的实现类，该实现类从类路径下加载配置文件。
 		ApplicationContext ctx=new ClassPathXmlApplicationContext("applicationContext.xml");
+		
 //		2.从IOC容器中获取Bean实例
+//		利用id 定位到 IOC 容器中的bean（要求IOC 中必须只能有一个该类型的bean）
 		HelloWorld helloWorld=(HelloWorld) ctx.getBean("helloworld");
 		//调用hello方法gg
 		helloWorld.hello();
+		
+		Car car=ctx.getBean(Car.class);
+		System.out.println(car);
+		
 	}
 }
