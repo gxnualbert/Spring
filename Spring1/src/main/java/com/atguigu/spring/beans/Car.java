@@ -34,6 +34,10 @@ public class Car {
 		return "Car [brand=" + brand + ", corp=" + corp + ", price=" + price + ", maxSpeed=" + maxSpeed + "]";
 	}
 	
-	
-	
+	public void setPrice(double price) {
+		this.price = price;
+	}
+	public void setMaxSpeed(int maxSpeed) {
+		this.maxSpeed = maxSpeed;
+	}
 }

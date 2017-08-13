@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans xmlns="http://www.springframework.org/schema/beans"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-4.3.xsd">
 
 	<!-- 
 		配置bean （通过属性输入的方式配置bean）
@@ -21,12 +24,127 @@
 	<!-- 使用构造器注入属性值可以指定参数的位置和参数的类型，以区分重载的构造器！！！！ -->
 	<bean id="car2" class="com.atguigu.spring.beans.Car"> 
 		<constructor-arg value="BMW" type="java.lang.String"></constructor-arg>
-		<constructor-arg value="shanghai" type="java.lang.String"></constructor-arg>
+		<!-- <constructor-arg value="shanghai" type="java.lang.String"></constructor-arg> -->
+		
+		<!-- 如果字面值包含特殊字符可以使用 <![CDATA[<shanghai~`^>]]> 包裹起来-->
+		<!-- 属性值也可以使用value子节点进行配置 -->
+		<constructor-arg  type="java.lang.String">
+			<value><![CDATA[<shanghai~`^>]]></value>
+		</constructor-arg>
 		<!-- <constructor-arg value="240" type="int"></constructor-arg> -->
 		<constructor-arg type="int">
 		<value>250</value>
 		</constructor-arg>
 	</bean>
+	
+	<bean id="person" class="com.atguigu.spring.beans.Person">
+	<property name="name" value="Tom"></property>
+	<property name="age" value="24"></property>
+	<!-- 可以使用property 的ref属性建立bean之间的引用关系,有两种引用方式：
+	 	1.<property name="car" ref="car2"></property>
+	 	2.<ref bean="car2"/>
+	 -->
+	<!-- <property name="car" ref="car2"></property> -->
+	<!-- <property name="car"><ref bean="car2"/></property> -->
+	<!-- 内部bean,不能被外部使用，只能在内部使用 -->
+	<property name="car">
+		<bean class="com.atguigu.spring.beans.Car">
+			<constructor-arg value="Ford"></constructor-arg>
+			<constructor-arg value="Changan"></constructor-arg>
+			<constructor-arg value="200000" type="double"></constructor-arg>
+		</bean>
+	</property>
+	</bean>
+	
+	
+	<bean id="person2" class="com.atguigu.spring.beans.Person">
+		<constructor-arg value="Jerry"></constructor-arg>
+		<constructor-arg value="25"></constructor-arg>
+		<!-- <constructor-arg ref="car"></constructor-arg> -->
+		
+		<!-- 测试赋值null -->
+		<!-- <constructor-arg><null/></constructor-arg> -->
+		<constructor-arg ref="car"></constructor-arg>
+		<!-- 为级联属性赋值，其中car 这个类需要有属性的set的方法（setMaxSpeed）
+			注意：属性需要先初始化后才可以为级联属性赋值，否则会有一场，和struct2不同。
+		 -->
+		<property name="car.maxSpeed" value="250"></property>
+	</bean>
+	
+	<!-- 测试如何配置集合属性 -->
+	<bean id="person3" class="com.atguigu.spring.beans.collections.Person">
+		<property name="name" value="Mike"></property>
+		<property name="age" value="27"></property>
+		<property name="cars">
+			<!-- 使用list 节点为List类型的属性赋值 -->
+			<list>
+				<ref bean="car"/>
+				<ref bean="car2"/>
+				<!-- 内部bean （注意内部bean是不需要id的）-->
+				<bean class="com.atguigu.spring.beans.Car">
+					<constructor-arg value="Ford"></constructor-arg>
+					<constructor-arg value="Changan"></constructor-arg>
+					<constructor-arg value="200000" type="double"></constructor-arg>
+				</bean>
+			</list>
+		</property>
+	</bean>
+	
+	
+	<!--  配置Map属性值  -->
+	<bean id="newPerson" class="com.atguigu.spring.beans.collections.NewPerson">
+		<property name="name" value="rose"></property>
+		<property name="age" value="28"></property>
+		<property name="cars">
+			<map>
+				<!-- 使用map 节点及map 的entry子节点配置map 类型的成员变量-->
+				<entry key="aa" value-ref="car"></entry>
+				<entry key="bb" value-ref="car2"></entry>
+			</map>
+		</property>
+	</bean>
+	
+	
+	<!-- 配置Properties 属性值 -->
+	<bean id="dataSource" class="com.atguigu.spring.beans.collections.DataSource">
+		<property name="properties">
+			<!-- 使用props 和prop 子节点为properties属性赋值-->
+			<props>
+				<prop key="user">root</prop>
+				<prop key="password">123456</prop>
+				<prop key="jdbcUrl">jdbc:mysql://test</prop>
+				<prop key="driverClass">com.mysql.jdbc.Driver</prop>
+			</props>
+		</property>
+	</bean>
+	
+	<!-- 配置单例的集合bean，以供多个bean进行引用(需要导入util命名空间，在左下角将点击Namespace,然后将util勾上即可)。
+	主要的作用就是将bean独立出来，给其他的bean调用！！！！ -->
+	<util:list id="cars">
+		<ref bean="car"/>
+		<ref bean="car2"/>
+	</util:list>
+	
+	
+	<!-- 下面通过引用cars 来引用单例集合 -->
+	<bean id="person4" class="com.atguigu.spring.beans.collections.Person">
+		<property name="name" value="jack"></property>
+		<property name="age" value="29"></property>
+		<property name="cars" ref="cars"></property>
+	</bean>
+	
+	<!-- 通过 p 命名空间为 bean 的属性赋值（需要先导入p命名空间） 相对于传统的配置方式更加简洁-->
+	<bean id="person5" class="com.atguigu.spring.beans.collections.Person" p:age="30" p:name="queen" p:cars-ref="cars"></bean>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
 	
 	
 	
