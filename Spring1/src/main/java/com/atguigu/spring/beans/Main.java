@@ -23,7 +23,10 @@ public class Main {
 		//调用hello方法gg
 		helloWorld.hello();
 		
-		Car car=ctx.getBean(Car.class);
+		Car car=(Car) ctx.getBean("car");
+		System.out.println(car);
+		
+		car=(Car) ctx.getBean("car2");
 		System.out.println(car);
 		
 	}
