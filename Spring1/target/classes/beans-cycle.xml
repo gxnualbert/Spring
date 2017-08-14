@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd">
+	<!-- init-method的方法名不一定是init，你可以自己定义，但是要在类com.atguigu.spring.beans.cycle.Car中有声明 -->
+	<bean id="car" class="com.atguigu.spring.beans.cycle.Car"
+		
+		init-method="init"
+		destroy-method="destroy">
+		<property name="brand" value="Audi"></property>
+		</bean>
+	
+	<!-- 配置bean的后置处理器 ：不需要配置id，IOC 容器自动识别是一个BeanPostProcessor-->
+	<!-- 实现 BeanPostProcessor 接口， 并具体提供两个方法的实现
+		1. Object postProcessBeforeInitialization(Object bean, String beanName)
+		2. Object postProcessAfterInitialization(Object bean, String beanName)
+		其中，第一个方法在init-method 之前被调用，第二个在init-method之后被调用。
+		折两个方法有两个参数：
+			bean：bean实例本事
+			beanName：IOC容器配置的bean名字		
+		返回值是实际上返回给用户的那个bean。注意，可以在以上两个方法中修改返回的bean，甚至返回一个新的bean
+		
+	-->
+	<bean class="com.atguigu.spring.beans.cycle.MyBeanPostProcesstor"></bean>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+
+</beans>
